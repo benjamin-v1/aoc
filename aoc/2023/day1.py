@@ -42,7 +42,7 @@ example_answer_b = 281
 def part_b(data):
 
     import re
-    from ..aoc import my_w2n
+    from helpers import my_w2n
 
     answer = 0
 

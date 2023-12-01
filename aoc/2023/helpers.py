@@ -15,5 +15,3 @@ def my_w2n(number_string):
     if number_string in digits:
         return digits[number_string]
     return number_string
-
-print(my_w2n("2"))
