@@ -42,12 +42,13 @@ example_answer_b = 281
 def part_b(data):
 
     import re
-    from word2number import w2n
+    from ..aoc import my_w2n
+
     answer = 0
 
     for line in data.split("\n"):
         tmp = re.findall(r'(?=(one|two|three|four|five|six|seven|eight|nine|\d{1}))', line)
-        numbers = [w2n.word_to_num(chr) for chr in tmp]
+        numbers = [my_w2n(chr) for chr in tmp]
         digit = int(str(numbers[0]) + str(numbers[-1]))
         answer += digit
     return answer
