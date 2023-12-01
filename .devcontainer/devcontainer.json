@@ -2,14 +2,8 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/python
 {
 	"name": "Python 3",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
-
-    "remoteEnv": {
-		"AOC_SESSION": "53616c7465645f5fcf900aaf4fa945b84b421734ffd557acb19dc94f1619654e7d3a21385d9b992607af1391a69e56dc9f83e5fd9d5150482989980ebe20ffbb"
-	 },
-
-	 "postCreateCommand": "pip3 install -r requirements.txt"
+	"postCreateCommand": "pip3 install -r requirements.txt"
 }
 
 
