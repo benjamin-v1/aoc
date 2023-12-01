@@ -40,12 +40,12 @@ example_answer_b = 281
 
 def part_b(data):
 
-    import regex
+    import re
     from word2number import w2n
     answer = 0
 
     for line in data.split("\n"):
-        tmp = regex.findall(r'one|two|three|four|five|six|seven|eight|nine|\d{1}', line, overlapped=True)
+        tmp = re.findall(r'(?=(one|two|three|four|five|six|seven|eight|nine|\d{1}))', line)
         numbers = [w2n.word_to_num(chr) for chr in tmp]
         digit = int(str(numbers[0]) + str(numbers[-1]))
         answer += digit
