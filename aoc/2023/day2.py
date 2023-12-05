@@ -58,9 +58,30 @@ example_answer_b = 2286
 
 
 def part_b(data):
-    answer = 0
+    import re
 
+    answer = 0
+    for game in data.split('\n'):
+        temp = re.findall(r'(Game (\d{1,})): (.*)',game)
+        if temp:
+            game = int(temp[0][1])
+            rounds = temp[0][2]
+            results = {
+                'red': [],
+                'green': [],
+                'blue': []
+            }
+            for round in rounds.split(';'):
+                # I am not happy about this....
+                results['red'].append(int(re.findall(r'(\d{1,}) red',round)[0]) if 'red' in round else 0)
+                results['blue'].append(int(re.findall(r'(\d{1,}) blue',round)[0]) if 'blue' in round else 0)
+                results['green'].append(int(re.findall(r'(\d{1,}) green',round)[0]) if 'green' in round else 0)
+
+            m_blue = max(results['blue'])
+            m_green = max(results['green'])
+            m_red = max(results['red'])
+            answer += m_blue * m_green * m_red
     return answer
 
-# assert part_b(example_data_b) == example_answer_b, "Example for part b is wrong!"
-# print("Part b is: " + str(part_b(data)))
+assert part_b(example_data_b) == example_answer_b, "Example for part b is wrong!"
+print("Part b is: " + str(part_b(data)))
