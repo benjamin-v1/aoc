@@ -39,28 +39,17 @@ humidity-to-location map:
 
 example_answer_a = 35
 
-def make_array(lines, name):
-    print('Creating ',)
-    array = []
+def make_map(lines, name):
+    print('Creating ', name)
+    map = {}
     for line in lines:
         if line:
-            line_dict = {}
+            i = 0
             d = line.split(' ')
-            line_dict['source_start'] = int(d[1])
-            line_dict['source_end'] = int(d[1])+int(d[2])
-            line_dict['destination'] = int(d[0])
-            array.append(line_dict)
-    return array
-
-def check_array(array,value):
-    destination = 0
-    for rule in array:
-        if rule['source_start'] <= value <= rule['source_end']:
-            destination = rule['destination'] + (value - rule['source_start'])
-    if destination == 0:
-        return value
-    return destination
-
+            while i < int(d[2]):
+                map[int(d[1])+i] = int(d[0])+i
+                i += 1
+    return dict(sorted(map.items()))
 
 def part_a(data):
     import re
@@ -70,24 +59,24 @@ def part_a(data):
     tmp = re.findall(r'seeds: (.*)\n\nseed-to-soil map:\n((.|\n)*)\nsoil-to-fertilizer map:\n((.|\n)*)\nfertilizer-to-water map:\n((.|\n)*)\nwater-to-light map:\n((.|\n)*)\nlight-to-temperature map:\n((.|\n)*)\ntemperature-to-humidity map:\n((.|\n)*)\nhumidity-to-location map:\n((.|\n)*)',data)
 
     seeds = list(map(int,tmp[0][0].split(' ')))
-    print('Creating arrays')
-    ss_array = make_array(tmp[0][1].split('\n'),'ss_array')
-    sf_array = make_array(tmp[0][3].split('\n'),'sf_array')
-    fw_array = make_array(tmp[0][5].split('\n'),'fw_array')
-    wl_array = make_array(tmp[0][7].split('\n'),'wl_array')
-    lt_array = make_array(tmp[0][9].split('\n'),'lt_array')
-    th_array = make_array(tmp[0][11].split('\n'),'th_array')
-    hl_array = make_array(tmp[0][13].split('\n'),'hl_array')
+    print('Creating maps')
+    ss_map = make_map(tmp[0][1].split('\n'),'ss_map')
+    sf_map = make_map(tmp[0][3].split('\n'),'sf_map')
+    fw_map = make_map(tmp[0][5].split('\n'),'fw_map')
+    wl_map = make_map(tmp[0][7].split('\n'),'wl_map')
+    lt_map = make_map(tmp[0][9].split('\n'),'lt_map')
+    th_map = make_map(tmp[0][11].split('\n'),'th_map')
+    hl_map = make_map(tmp[0][13].split('\n'),'hl_map')
 
     for seed in seeds:
         # This is going to be horrid....
-        so = check_array(ss_array,seed)
-        fu = check_array(sf_array,so)
-        wa = check_array(fw_array,fu)
-        li = check_array(wl_array,wa)
-        te = check_array(lt_array,li)
-        hu = check_array(th_array,te)
-        lo = check_array(hl_array,hu)
+        so = ss_map.get(seed, seed)
+        fu = sf_map.get(so,so)
+        wa = fw_map.get(fu,fu)
+        li = wl_map.get(wa,wa)
+        te = lt_map.get(li,li)
+        hu = th_map.get(te,te)
+        lo = hl_map.get(hu,hu)
 
         locations.append(lo)
 
@@ -99,12 +88,12 @@ def part_a(data):
         print('te: ',te)
         print('hu: ',hu)
         print('lo: ',lo)
-        print('\n')
 
     answer = min(locations)
     return answer
 
 # print(part_a(example_data_a))
+
 # assert part_a(example_data_a) == example_answer_a, "Example for part a is wrong!"
 print("Part a is: " + str(part_a(data)))
 
