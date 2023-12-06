@@ -40,7 +40,7 @@ humidity-to-location map:
 example_answer_a = 35
 
 def make_array(lines, name):
-    print('Creating ',)
+    print('Creating ',name)
     array = []
     for line in lines:
         if line:
@@ -57,9 +57,9 @@ def check_array(array,value):
     for rule in array:
         if rule['source_start'] <= value <= rule['source_end']:
             destination = rule['destination'] + (value - rule['source_start'])
+            return destination 
     if destination == 0:
         return value
-    return destination
 
 
 def part_a(data):
@@ -105,22 +105,67 @@ def part_a(data):
     return answer
 
 # print(part_a(example_data_a))
-# assert part_a(example_data_a) == example_answer_a, "Example for part a is wrong!"
-print("Part a is: " + str(part_a(data)))
+assert part_a(example_data_a) == example_answer_a, "Example for part a is wrong!"
+# print("Part a is: " + str(part_a(data)))
 
 
 ### PART B
 
-# example_data_b = """
-# """
+example_data_b = example_data_a
 
-# example_answer_b = 0
+example_answer_b = 46
 
+def part_b(data):
+    import re
+    answer = 0
+    locations = []
+    seed_ranges = []
+    print('getting data...')
+    tmp = re.findall(r'seeds: (.*)\n\nseed-to-soil map:\n((.|\n)*)\nsoil-to-fertilizer map:\n((.|\n)*)\nfertilizer-to-water map:\n((.|\n)*)\nwater-to-light map:\n((.|\n)*)\nlight-to-temperature map:\n((.|\n)*)\ntemperature-to-humidity map:\n((.|\n)*)\nhumidity-to-location map:\n((.|\n)*)',data)
 
-# def part_b(data):
-#     answer = 0
+    seed_res = re.findall(r'((\d*) (\d*)) ?',tmp[0][0])
+    for seed_re  in seed_res:
+        seed_ranges.append({'start':int(seed_re[1]),'end':int(seed_re[1]) + int(seed_re[2])-1})
 
-#     return answer
+    print('Creating arrays')
+    ss_array = make_array(tmp[0][1].split('\n'),'ss_array')
+    sf_array = make_array(tmp[0][3].split('\n'),'sf_array')
+    fw_array = make_array(tmp[0][5].split('\n'),'fw_array')
+    wl_array = make_array(tmp[0][7].split('\n'),'wl_array')
+    lt_array = make_array(tmp[0][9].split('\n'),'lt_array')
+    th_array = make_array(tmp[0][11].split('\n'),'th_array')
+    hl_array = make_array(tmp[0][13].split('\n'),'hl_array')
+
+    for seed_range in seed_ranges:
+        seed = seed_range['start']
+        print('Range: ', seed , ' to ', seed_range['end'])
+
+        while seed <= seed_range['end']:
+            # This is going to be horrid....
+            so = check_array(ss_array,seed)
+            fu = check_array(sf_array,so)
+            wa = check_array(fw_array,fu)
+            li = check_array(wl_array,wa)
+            te = check_array(lt_array,li)
+            hu = check_array(th_array,te)
+            lo = check_array(hl_array,hu)
+
+            locations.append(lo)
+
+            # print('SEED', seed)
+            # print('so: ',so)
+            # print('fu: ',fu)
+            # print('wa: ',wa)
+            # print('li: ',li)
+            # print('te: ',te)
+            # print('hu: ',hu)
+            # print('lo: ',lo)
+            # print('\n')
+
+            seed += 1
+
+    answer = min(locations)
+    return answer
 
 # assert part_b(example_data_b) == example_answer_b, "Example for part b is wrong!"
-# print("Part b is: " + str(part_b(data)))
+print("Part b is: " + str(part_b(data)))
